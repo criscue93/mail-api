@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ApiModule } from './apis/api.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Correos } from './entitys/correo.entity';
 @Module({
   imports: [
     ApiModule,
@@ -16,8 +17,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.MAIL_USER,
       password: process.env.MAIL_PASSWORD,
       database: process.env.MAIL_DATABASE,
-      entities: [],
-      synchronize: false,
+      entities: [Correos],
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
