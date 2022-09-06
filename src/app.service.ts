@@ -8,9 +8,9 @@ export class AppService {
     return {
       error: false,
       message:
-        'Bienvenido a PROYECT NESTJS - API, basado ​​en principios REST, devuelve metadatos JSON - Copyright © Ing. Cristian Cueto Vargas',
+        'Bienvenido a MAIL - API, basado ​​en principios REST, devuelve metadatos JSON - Copyright © Ing. Cristian Cueto Vargas',
       response: {
-        nameApp: 'PROYECT NESTJS - API',
+        nameApp: 'MAIL - API',
         version: '0.0.1',
         dateTimeServer: DateTime.now().toISO(),
       },

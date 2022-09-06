@@ -1,7 +1,7 @@
 {
-  "name": "proyect-nestjs",
+  "name": "mail-api",
   "version": "0.0.1",
-  "description": "Proyecto base para desarrollar en NestJs",
+  "description": "Microservicio para el envio de correos",
   "author": "Ing. Cristian Cueto V",
   "private": true,
   "license": "UNLICENSED",
