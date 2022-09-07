@@ -8,7 +8,7 @@ export class correo {
 
 export class correoDTO {
   @IsEmail()
-  @IsDefined({ message: 'El correo es obligatorio' })
-  @MinLength(1, { message: 'El correo debe contener al menos 1 caracter' })
+  @IsDefined({ message: 'El correo es obligatorio.' })
+  @MinLength(1, { message: 'El correo debe contener al menos 1 caracter.' })
   correo: string;
 }

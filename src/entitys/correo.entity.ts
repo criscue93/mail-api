@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +12,7 @@ export class Correos {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
+  @Index({ unique: true })
   @Column({ type: 'varchar', length: 100 })
   correo: string;
 

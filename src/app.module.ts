@@ -3,8 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiModule } from './apis/api.module';
 import { DatabaseModule } from './conection/database.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [ApiModule, DatabaseModule],
+  imports: [ApiModule, DatabaseModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })
