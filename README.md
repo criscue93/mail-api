@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Mail - API, microservicio para el envío de correos.
 
 ## Installation
 
@@ -45,17 +45,62 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Steps
+
+### Obtener contraseña
+
+Para poder utilizar el servicio, se tiene que ingresar a la cuenta del correo gmail, una vez ingresado a configuraciones de la cuenta ir al apartado de seguridad, ahi habilitar primer la autencicación de dos pasos.
+
+Una vez activada esta opción, en el mismo apartado pero esta vez en contraseñas de aplicación, se tiene que crear una contraseña, ingresar, poner el nombre de la app y google automaticamente genera la contraseña, esta se tiene que guardar para poder ingresar a la base de datos.
+
+### CRUD Correos
+
+Se tiene el CRUD completo para el ingreso de diferentes correos de donde se harán el envío de los mismos, para cada uno se tiene que hacer el paso anterior.
+
+### Listar todos los correos
 
 ```bash
-# unit tests
-$ npm run test
+EndPoint: GET - url/api/mail/list
+```
 
-# e2e tests
-$ npm run test:e2e
+### Insertar un correo
 
-# test coverage
-$ npm run test:cov
+```bash
+EndPoint: POST - url/api/mail/insert
+{
+  "correo": "correo de envio, con el que se siguio los anteriores pasos",
+  "password": "contraseña generada para el correo, segun los anteriores pasos"
+}
+```
+
+### Editar un correo
+
+```bash
+EndPoint: POST - url/api/mail/update/:id
+{
+  "correo": "correo de envio, con el que se siguio los anteriores pasos",
+  "password": "contraseña generada para el correo, segun los anteriores pasos"
+}
+```
+
+### Editar el estado de un correo
+
+```bash
+EndPoint: POST - url/api/mail/status/:id
+```
+
+### Envio de correos
+
+```bash
+EndPoint: POST - url/api/send
+{
+  "to": "Correo al que se enviará el mensaje, si son más de dos correos, tienen que estar separados por comas",
+  "subject": "Referencia del correo",
+  "text": "Cuerpo del correo, mensaje a enviar",
+  "funcionarioId": id del funcionario que envia el sms,
+  "aplicacion": "codigo de la aplicación de la que se envia el mensaje"
+
+}
 ```
 
 ## Support
@@ -69,4 +114,4 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## License
 
-PROYECT-NESTJS API [MIT licensed](LICENSE).
+MAIL - API [MIT licensed](LICENSE).
