@@ -16,6 +16,9 @@ export class Correos {
   @Column({ type: 'varchar', length: 100 })
   correo: string;
 
+  @Column({ type: 'varchar', length: 250 })
+  password: string;
+
   @Column({ type: 'int', default: 0, unsigned: true })
   contador: number;
 

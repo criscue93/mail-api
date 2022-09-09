@@ -3,6 +3,7 @@ import { IResponse } from 'src/interfaces/IResponse';
 import { Repository } from 'typeorm';
 import { Correos } from '../../entitys/correo.entity';
 import { correoDTO } from './correo.dto';
+import * as cryptojs from 'crypto-js';
 
 @Injectable()
 export class CorreoQueryService {
@@ -61,11 +62,15 @@ export class CorreoQueryService {
     };
 
     try {
+      const encryptPassword = await cryptojs.AES.encrypt(
+        JSON.stringify(data.password),
+        process.env.KEY,
+      ).toString();
       const insertReturn = await this.mailRepository
         .createQueryBuilder()
         .insert()
         .into(Correos)
-        .values({ correo: data.correo })
+        .values({ correo: data.correo, password: encryptPassword })
         .execute();
 
       if (insertReturn) {
@@ -102,10 +107,22 @@ export class CorreoQueryService {
     };
 
     try {
+      const encryptPassword = await cryptojs.AES.encrypt(
+        JSON.stringify(data.password),
+        process.env.KEY,
+      ).toString();
+      // const decryptPassword = await cryptojs.AES.decrypt(
+      //   encryptPassword,
+      //   process.env.KEY,
+      // );
+      // const decryptedData = JSON.parse(
+      //   decryptPassword.toString(cryptojs.enc.Utf8),
+      // );
+
       const updateReturn = await this.mailRepository
         .createQueryBuilder()
         .update(Correos)
-        .set({ correo: data.correo })
+        .set({ correo: data.correo, password: encryptPassword })
         .where('id = :id', { id })
         .execute();
 

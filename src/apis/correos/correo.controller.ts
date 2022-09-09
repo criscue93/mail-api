@@ -55,6 +55,7 @@ export class CorreoController {
 
     const data = new correoDTO();
     data.correo = body.correo;
+    data.password = body.password;
 
     const valida = await validate(data);
     if (valida.length > 0) {
@@ -105,6 +106,7 @@ export class CorreoController {
 
     const data = new correoDTO();
     data.correo = body.correo;
+    data.password = body.password;
 
     const valida = await validate(data);
     if (valida.length > 0) {
