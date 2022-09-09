@@ -6,6 +6,8 @@ import { ApiModule } from './apis/api.module';
 import { DatabaseModule } from './conection/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { Mail, MailSchema } from './schemas/mail.schema';
+import { CorreoQueryService } from './apis/correos/correo-query.service';
+import { mailProviders } from './conection/mail.providers';
 @Module({
   imports: [
     ApiModule,
@@ -25,6 +27,6 @@ import { Mail, MailSchema } from './schemas/mail.schema';
     ),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [...mailProviders, AppService, CorreoQueryService],
 })
 export class AppModule {}

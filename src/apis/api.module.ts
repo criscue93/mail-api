@@ -9,5 +9,6 @@ import { mailProviders } from '../conection/mail.providers';
   imports: [DatabaseModule],
   controllers: [CorreoController],
   providers: [...mailProviders, CorreoService, CorreoQueryService],
+  exports: [CorreoQueryService],
 })
 export class ApiModule {}

@@ -6,10 +6,13 @@ import { mailDTO } from './dto/mail.dto';
 import * as nodemailer from 'nodemailer';
 import { Mail, MailDocument } from './schemas/mail.schema';
 import { Model } from 'mongoose';
+import { CorreoQueryService } from './apis/correos/correo-query.service';
+import * as cryptojs from 'crypto-js';
 
 @Injectable()
 export class AppService {
   constructor(
+    private readonly correoQueryService: CorreoQueryService,
     @InjectModel(Mail.name, 'mail')
     private mailDocument: Model<MailDocument>,
   ) {}
@@ -29,7 +32,7 @@ export class AppService {
   }
 
   async sendMessage(data: mailDTO): Promise<IResponse> {
-    const response: IResponse = {
+    let response: IResponse = {
       error: true,
       message: 'Existen problemas con el servicio de sendMessage',
       response: {},
@@ -37,14 +40,24 @@ export class AppService {
     };
 
     try {
-      console.log(data);
+      response = await this.correoQueryService.selectMailMinContador();
+      const userData = response.response['correo'];
+      const encryptPassword = response.response['password'];
+      const decryptPassword = await cryptojs.AES.decrypt(
+        encryptPassword,
+        process.env.KEY,
+      );
+      const decryptedData = JSON.parse(
+        decryptPassword.toString(cryptojs.enc.Utf8),
+      );
+
       const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
         secure: true,
         auth: {
-          user: process.env.USER_MAIL,
-          pass: process.env.PASSWORD_MAIL,
+          user: userData,
+          pass: decryptedData,
         },
         logger: true,
         transactionLog: true,
@@ -67,6 +80,12 @@ export class AppService {
       };
 
       await transporter.sendMail(message);
+
+      const contador = response.response['contador'] + 1;
+      await this.correoQueryService.updateContador(
+        response.response['id'],
+        contador,
+      );
 
       response.error = false;
       response.message = 'Se logró enviar el correo correctamente';

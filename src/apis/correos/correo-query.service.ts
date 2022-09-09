@@ -111,18 +111,52 @@ export class CorreoQueryService {
         JSON.stringify(data.password),
         process.env.KEY,
       ).toString();
-      // const decryptPassword = await cryptojs.AES.decrypt(
-      //   encryptPassword,
-      //   process.env.KEY,
-      // );
-      // const decryptedData = JSON.parse(
-      //   decryptPassword.toString(cryptojs.enc.Utf8),
-      // );
 
       const updateReturn = await this.mailRepository
         .createQueryBuilder()
         .update(Correos)
         .set({ correo: data.correo, password: encryptPassword })
+        .where('id = :id', { id })
+        .execute();
+
+      if (updateReturn) {
+        response.error = false;
+        response.message = 'Se logró editar el correo correctamente.';
+        response.response = updateReturn.affected;
+        response.status = 201;
+      } else {
+        response.error = true;
+        response.message = 'No se logró editar el correo.';
+        response.response = {
+          errors: { mail: ['No se logró editar el correo.'] },
+        };
+        response.status = 422;
+      }
+    } catch (error) {
+      response.error = true;
+      response.message = 'No se pudo realizar la solicitud.';
+      response.response = {
+        errors: { mail: [`${error.message}`] },
+      };
+      response.status = 422;
+    }
+
+    return response;
+  }
+
+  async updateContador(id: number, contador: number): Promise<IResponse> {
+    const response = {
+      error: true,
+      message: 'Existen problemas con el servicio de editar un correo.',
+      response: {},
+      status: 500,
+    };
+
+    try {
+      const updateReturn = await this.mailRepository
+        .createQueryBuilder()
+        .update(Correos)
+        .set({ contador: contador })
         .where('id = :id', { id })
         .execute();
 
@@ -216,6 +250,54 @@ export class CorreoQueryService {
         .select('mail')
         .from(Correos, 'mail')
         .where(data.where, data.value)
+        .execute();
+
+      if (selectReturn) {
+        response.error = false;
+        response.message = 'Se logró los datos del correo correctamente.';
+        response.response = selectReturn[0];
+        response.status = 201;
+      } else {
+        response.error = true;
+        response.message = 'No se logró obtener los datos del correo.';
+        response.response = {
+          errors: { mail: ['No se logró obtener los datos del correo.'] },
+        };
+        response.status = 422;
+      }
+    } catch (error) {
+      response.error = true;
+      response.message = 'No se pudo realizar la solicitud.';
+      response.response = {
+        errors: { mail: [`${error.message}`] },
+      };
+      response.status = 422;
+    }
+
+    return response;
+  }
+
+  async selectMailMinContador(): Promise<IResponse> {
+    const response = {
+      error: true,
+      message:
+        'Existen problemas con el servicio de seleccionar los datos de un correo.',
+      response: {},
+      status: 500,
+    };
+
+    try {
+      const selectReturn = await this.mailRepository
+        .createQueryBuilder()
+        .select(
+          'mail.id, mail.correo, mail.password, MIN(mail.contador) contador',
+        )
+        .from(Correos, 'mail')
+        .where(
+          'mail.contador = (SELECT MIN(contador) FROM correos) AND mail.estado = 0',
+        )
+        .groupBy('mail.correo')
+        .orderBy('mail.id', 'ASC')
         .execute();
 
       if (selectReturn) {
