@@ -252,7 +252,7 @@ export class CorreoQueryService {
         .where(data.where, data.value)
         .execute();
 
-      if (selectReturn) {
+      if (selectReturn.length > 0) {
         response.error = false;
         response.message = 'Se logró los datos del correo correctamente.';
         response.response = selectReturn[0];
