@@ -64,19 +64,30 @@ export class AppService {
         allowInternalNetworkInterfaces: false,
       });
 
+      interface dataArchivos {
+        filename: string;
+        content: string;
+        encoding: string;
+      }
+      const arrayArchivos = [];
+      let condi = 0;
+
+      while (data.archivo[condi] != undefined) {
+        const valida: dataArchivos = {
+          filename: data.archivo[condi].file,
+          content: data.archivo[condi].base64,
+          encoding: 'base64',
+        };
+        arrayArchivos.push(valida);
+        condi++;
+      }
+
       const message = {
-        from: 'ccuetovargas65@gmail.com',
-        to: `${data.to}`,
-        subject: `${data.subject}`,
-        text: `${data.text}`,
-        // html: '',
-        // attachments: [
-        //   {
-        //     filename: 'text1.txt',
-        //     content: 'aGVsbG8gd29ybGQh',
-        //     encoding: 'base64',
-        //   },
-        // ],
+        from: userData,
+        to: `${data.correo}`,
+        subject: `${data.asunto}`,
+        text: `${data.mensaje}`,
+        attachments: arrayArchivos,
       };
 
       await transporter.sendMail(message);
@@ -89,7 +100,7 @@ export class AppService {
 
       response.error = false;
       response.message = 'Se logró enviar el correo correctamente';
-      response.response = {};
+      response.response = userData;
       response.status = 200;
     } catch (error) {
       response.response = error;

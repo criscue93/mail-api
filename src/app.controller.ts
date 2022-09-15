@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Ip, Post, Req, Res } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
-import { getIP } from './helpers/util.helper';
-import * as uaParser from 'ua-parser-js';
 import { validate } from 'class-validator';
 import { mail, mailDTO } from './dto/mail.dto';
 
@@ -27,12 +25,7 @@ export class AppController {
   @ApiOperation({
     summary: 'Servicio enviar mensajes por Telegram',
   })
-  async sendMessage(
-    @Res() res: Response,
-    @Req() req: Request,
-    @Ip() ip,
-    @Body() body: mail,
-  ) {
+  async sendMessage(@Res() res: Response, @Body() body: mail) {
     let response = {
       error: true,
       message: 'Existen problemas con el controlador sendMessage',
@@ -41,9 +34,10 @@ export class AppController {
     };
 
     const data = new mailDTO();
-    data.to = body.to;
-    data.subject = body.subject;
-    data.text = body.text;
+    data.correo = body.correo;
+    data.asunto = body.asunto;
+    data.mensaje = body.mensaje;
+    data.archivo = body.archivo;
     data.funcionarioId = body.funcionarioId;
     data.aplicacion = body.aplicacion;
 
@@ -61,27 +55,37 @@ export class AppController {
       try {
         response = await this.appService.sendMessage(data);
 
-        const headers = req.headers;
-        const agent = new uaParser(`${headers['user-agent']}`);
-        const userAgent = agent.getResult();
+        let estadoEnvio = false;
+        if (response.error === false) {
+          estadoEnvio = true;
+        }
+
+        let estadoFichero = false;
+        if (data.archivo.length != 0) {
+          estadoFichero = true;
+        }
+
         const logs = {
-          origenMail: {
-            email: process.env.USER_MAIL,
-            aplicacion: data.aplicacion,
-            funcionarioId: data.funcionarioId,
-          },
-          destinoMail: {
-            email: data.to,
-            subject: data.subject,
-            text: data.text,
-          },
           origen: {
-            ip: getIP(ip),
-            userAgent,
+            correo: response.response,
+            app_nombre: data.aplicacion,
+            funcionario: data.funcionarioId,
           },
+          destino: {
+            correo: data.correo,
+            asunto: data.asunto,
+            mensaje: data.mensaje,
+            fichero: estadoFichero,
+          },
+          enviado: estadoEnvio,
         };
 
         await this.appService.saveLogs(logs);
+
+        response.error = false;
+        response.message = 'Se logró enviar el correo correctamente';
+        response.response = {};
+        response.status = 200;
       } catch (error) {
         response.response = error;
         response.status = 500;

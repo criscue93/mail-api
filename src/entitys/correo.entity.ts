@@ -22,6 +22,9 @@ export class Correos {
   @Column({ type: 'int', default: 0, unsigned: true })
   contador: number;
 
+  @Column({ type: 'tinyint', default: 1, unsigned: true })
+  controlador: number;
+
   @Column({ type: 'tinyint', default: 0, unsigned: true })
   estado: number;
 

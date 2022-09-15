@@ -9,13 +9,13 @@ export class Mail {
   createdAt: Date;
 
   @Prop({ type: Object })
-  origenMail: any;
-
-  @Prop({ type: Object })
-  destinoMail: any;
-
-  @Prop({ type: Object })
   origen: any;
+
+  @Prop({ type: Object })
+  destino: any;
+
+  @Prop({ type: Boolean })
+  enviado: boolean;
 }
 
 export const MailSchema = SchemaFactory.createForClass(Mail);
