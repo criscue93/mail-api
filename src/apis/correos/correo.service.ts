@@ -106,8 +106,23 @@ export class CorreoService {
       response = await this.correoQueryService.selectMail(data1);
 
       if (response.error === false) {
-        const estado = response.response['mail_estado'];
-        response = await this.correoQueryService.statusMail(id, estado);
+        const controlador = response.response['mail_controlador'];
+        if (controlador == 0) {
+          response.error = true;
+          response.message =
+            'No se puede cambiar el estado del correo porque esta activo para enviar correos, envíe primero un correo y podrá cambiar el estado del correo seleccionado.';
+          response.response = {
+            errors: {
+              mail: [
+                'No se puede cambiar el estado del correo porque esta activo para enviar correos, envíe primero un correo y podrá cambiar el estado del correo seleccionado.',
+              ],
+            },
+          };
+          response.status = 422;
+        } else {
+          const estado = response.response['mail_estado'];
+          response = await this.correoQueryService.statusMail(id, estado);
+        }
       } else {
         response.error = true;
         response.message = 'El correo selecionado no existe.';

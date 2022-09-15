@@ -40,9 +40,14 @@ export class AppService {
     };
 
     try {
-      response = await this.correoQueryService.selectMailMinContador();
-      const userData = response.response['correo'];
-      const encryptPassword = response.response['password'];
+      const data1 = {
+        where: 'mail.controlador = :controlador AND mail.estado = :estado',
+        value: { controlador: 0, estado: 0 },
+      };
+      response = await this.correoQueryService.selectMail(data1);
+
+      const userData = response.response['mail_correo'];
+      const encryptPassword = response.response['mail_password'];
       const decryptPassword = await cryptojs.AES.decrypt(
         encryptPassword,
         process.env.KEY,
@@ -92,10 +97,12 @@ export class AppService {
 
       await transporter.sendMail(message);
 
-      const contador = response.response['contador'] + 1;
+      const contador = response.response['mail_contador'] + 1;
+      const numerador = response.response['mail_numerador'] + 1;
       await this.correoQueryService.updateContador(
-        response.response['id'],
+        response.response['mail_id'],
         contador,
+        numerador,
       );
 
       response.error = false;
