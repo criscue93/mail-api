@@ -15,7 +15,7 @@ export class mail {
     default: [],
     isArray: true,
     example:
-      '[ { "file": "nombre.terminacion(pdf, docx, xlsx, etc)", "base64": "base64 el archivo a enviar" } ...]',
+      '[ { "file": "nombre.tipo(pdf, docx, xlsx, etc)", "base64": "base64 del archivo a enviar" } ...]',
   })
   archivo: any[];
 

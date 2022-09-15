@@ -94,9 +94,10 @@ EndPoint: POST - url/api/mail/status/:id
 ```bash
 EndPoint: POST - url/api/send
 {
-  "to": "Correo al que se enviará el mensaje, si son más de dos correos, tienen que estar separados por comas",
-  "subject": "Referencia del correo",
-  "text": "Cuerpo del correo, mensaje a enviar",
+  "correo": "Correo al que se enviará el mensaje, si son más de dos correos, tienen que estar separados por comas",
+  "asunto": "Referencia del correo",
+  "mensaje": "Cuerpo del correo, mensaje a enviar",
+  "archivo": [ { "file": "nombre.tipo(pdf, docx, xlsx, etc)", "base64": "base64 del archivo a enviar" }, ... ],
   "funcionarioId": id del funcionario que envia el sms,
   "aplicacion": "codigo de la aplicación de la que se envia el mensaje"
 
