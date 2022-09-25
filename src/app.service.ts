@@ -91,7 +91,7 @@ export class AppService {
         from: userData,
         to: `${data.correo}`,
         subject: `${data.asunto}`,
-        text: `${data.mensaje}`,
+        html: `${data.mensaje}`,
         attachments: arrayArchivos,
       };
 

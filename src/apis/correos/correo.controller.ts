@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Res,
+  Version,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CorreoService } from './correo.service';
@@ -14,11 +15,12 @@ import { Response } from 'express';
 import { correo, correoDTO } from './correo.dto';
 import { validate } from 'class-validator';
 
-@ApiTags('MAIL')
+@ApiTags('EMAIL')
 @Controller('api')
 export class CorreoController {
   constructor(private readonly correoService: CorreoService) {}
 
+  @Version('1')
   @Get('/mail/list')
   @ApiOperation({ summary: 'Servicio para listar todos los correos.' })
   async listMail(@Res() res: Response) {
@@ -43,6 +45,7 @@ export class CorreoController {
     return res.status(response.status).json(response);
   }
 
+  @Version('1')
   @Post('/mail/insert')
   @ApiOperation({ summary: 'Servicio para insertar un correo.' })
   async insertMail(@Res() res: Response, @Body() body: correo) {
@@ -90,6 +93,7 @@ export class CorreoController {
     return res.status(response.status).json(response);
   }
 
+  @Version('1')
   @Put('/mail/update/:id')
   @ApiOperation({ summary: 'Servicio para editar un correo.' })
   async updateMail(
@@ -141,6 +145,7 @@ export class CorreoController {
     return res.status(response.status).json(response);
   }
 
+  @Version('1')
   @Patch('/mail/status/:id')
   @ApiOperation({ summary: 'Servicio para cambiar el estado de un correo.' })
   async statusMail(@Res() res: Response, @Param('id') id: number) {

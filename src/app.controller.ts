@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, Version } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { validate } from 'class-validator';
-import { mail, mailDTO } from './dto/mail.dto';
+import { mailDTO } from './dto/mail.dto';
 
 @ApiTags('SERVICES')
 @Controller()
@@ -21,11 +21,12 @@ export class AppController {
     return res.status(response.status).json(response);
   }
 
+  @Version('1')
   @Post('/send')
   @ApiOperation({
-    summary: 'Servicio enviar mensajes por Telegram',
+    summary: 'Servicio enviar mensajes por correo',
   })
-  async sendMessage(@Res() res: Response, @Body() body: mail) {
+  async sendMessage(@Res() res: Response, @Body() body: mailDTO) {
     let response = {
       error: true,
       message: 'Existen problemas con el controlador sendMessage',
@@ -40,6 +41,7 @@ export class AppController {
     data.archivo = body.archivo;
     data.funcionarioId = body.funcionarioId;
     data.aplicacion = body.aplicacion;
+    data.guardar = body.guardar;
 
     const valid = await validate(data);
     if (valid.length > 0) {
@@ -65,22 +67,24 @@ export class AppController {
           estadoFichero = true;
         }
 
-        const logs = {
-          origen: {
-            correo: response.response,
-            app_nombre: data.aplicacion,
-            funcionario: data.funcionarioId,
-          },
-          destino: {
-            correo: data.correo,
-            asunto: data.asunto,
-            mensaje: data.mensaje,
-            fichero: estadoFichero,
-          },
-          enviado: estadoEnvio,
-        };
+        if (data.guardar === true) {
+          const logs = {
+            origen: {
+              correo: response.response,
+              app_nombre: data.aplicacion,
+              funcionario: data.funcionarioId,
+            },
+            destino: {
+              correo: data.correo,
+              asunto: data.asunto,
+              mensaje: data.mensaje,
+              fichero: estadoFichero,
+            },
+            enviado: estadoEnvio,
+          };
 
-        await this.appService.saveLogs(logs);
+          await this.appService.saveLogs(logs);
+        }
 
         response.error = false;
         response.message = 'Se logró enviar el correo correctamente';

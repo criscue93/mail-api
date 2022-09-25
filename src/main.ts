@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { VersioningType } from '@nestjs/common';
 import * as express from 'express';
 
 async function bootstrap() {
@@ -15,6 +16,10 @@ async function bootstrap() {
       extended: true,
     }),
   );
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('MAIL - API')
