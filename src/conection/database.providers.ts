@@ -7,11 +7,11 @@ export const databaseProviders = [
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'mysql',
-        host: process.env.MAIL_HOST,
-        port: parseInt(process.env.MAIL_PORT, 10),
-        username: process.env.MAIL_USER,
-        password: process.env.MAIL_PASSWORD,
-        database: process.env.MAIL_DATABASE,
+        host: process.env.APP_HOST,
+        port: parseInt(process.env.APP_PORT, 10),
+        username: process.env.APP_USER,
+        password: process.env.APP_PASSWORD,
+        database: process.env.APP_DATABASE,
         entities: [Correos],
         synchronize: true,
       });

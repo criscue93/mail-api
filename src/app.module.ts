@@ -13,7 +13,7 @@ import { mailProviders } from './conection/mail.providers';
     ApiModule,
     DatabaseModule,
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_MAIL, {
+    MongooseModule.forRoot(process.env.APP_MONGO, {
       connectionName: 'mail',
     }),
     MongooseModule.forFeature(
