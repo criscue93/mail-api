@@ -9,7 +9,7 @@ import {
   Res,
   Version,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CorreoService } from './correo.service';
 import { Response } from 'express';
 import { correo, correoDTO } from './correo.dto';
@@ -48,6 +48,20 @@ export class CorreoController {
   @Version('1')
   @Post('/mail/insert')
   @ApiOperation({ summary: 'Servicio para insertar un correo.' })
+  @ApiBody({
+    schema: {
+      properties: {
+        correo: {
+          type: 'string',
+          example: 'asdgasd@gmail.com',
+        },
+        password: {
+          type: 'string',
+          example: 'asdfads$54ast4$',
+        },
+      },
+    },
+  })
   async insertMail(@Res() res: Response, @Body() body: correo) {
     let response = {
       error: true,
@@ -96,6 +110,20 @@ export class CorreoController {
   @Version('1')
   @Put('/mail/update/:id')
   @ApiOperation({ summary: 'Servicio para editar un correo.' })
+  @ApiBody({
+    schema: {
+      properties: {
+        correo: {
+          type: 'string',
+          example: 'asdgasd@gmail.com',
+        },
+        password: {
+          type: 'string',
+          example: 'asdfads$54ast4$',
+        },
+      },
+    },
+  })
   async updateMail(
     @Res() res: Response,
     @Body() body: correo,

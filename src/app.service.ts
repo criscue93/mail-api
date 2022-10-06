@@ -77,10 +77,10 @@ export class AppService {
       const arrayArchivos = [];
       let condi = 0;
 
-      while (data.archivo[condi] != undefined) {
+      while (data.adjuntos[condi] != undefined) {
         const valida: dataArchivos = {
-          filename: data.archivo[condi].file,
-          content: data.archivo[condi].base64,
+          filename: data.adjuntos[condi].file,
+          content: data.adjuntos[condi].base64,
           encoding: 'base64',
         };
         arrayArchivos.push(valida);

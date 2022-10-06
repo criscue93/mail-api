@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsDefined,
-  IsInt,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsBoolean, IsDefined, IsString, MinLength } from 'class-validator';
 
 export class mailDTO {
   @IsString({ message: 'Los correos de destino tienen que ser una cadena.' })
@@ -16,17 +10,17 @@ export class mailDTO {
   @ApiProperty()
   correo: string;
 
-  @IsString({ message: 'Subject tiene que ser una cadena.' })
-  @IsDefined({ message: 'Subject es obligatorio.' })
+  @IsString({ message: 'El asunto tiene que ser una cadena.' })
+  @IsDefined({ message: 'El asunto es obligatorio.' })
   @MinLength(1, {
-    message: 'Subject debe contener al menos 1 caracter.',
+    message: 'El asunto debe contener al menos 1 caracter.',
   })
   asunto: string;
 
-  @IsString({ message: 'Subject tiene que ser una cadena.' })
-  @IsDefined({ message: 'Subject es obligatorio.' })
+  @IsString({ message: 'El mensaje tiene que ser una cadena.' })
+  @IsDefined({ message: 'El mensaje es obligatorio.' })
   @MinLength(1, {
-    message: 'Subject debe contener al menos 1 caracter.',
+    message: 'El mensaje debe contener al menos 1 caracter.',
   })
   @ApiProperty()
   mensaje: string;
@@ -34,19 +28,8 @@ export class mailDTO {
   @ApiProperty({
     default: [],
     isArray: true,
-    example:
-      '[ { "file": "nombre.tipo(pdf, docx, xlsx, etc)", "base64": "base64 del archivo a enviar" } ...]',
   })
-  archivo: any[];
-
-  @IsInt({ message: 'El id del funcionario tiene que ser un número' })
-  @ApiProperty()
-  funcionarioId: number;
-
-  @IsDefined({ message: 'El nombre de la aplicación es obligatorio' })
-  @IsString({ message: 'El nombre de la aplicación debe ser una cadena' })
-  @ApiProperty()
-  aplicacion: string;
+  adjuntos: any[];
 
   @ApiProperty()
   @IsBoolean()

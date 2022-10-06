@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Res, Version } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { validate } from 'class-validator';
 import { mailDTO } from './dto/mail.dto';
@@ -26,6 +26,37 @@ export class AppController {
   @ApiOperation({
     summary: 'Servicio enviar mensajes por correo',
   })
+  @ApiBody({
+    schema: {
+      properties: {
+        correo: {
+          type: 'string',
+          example: 'asdfg@gmail.com',
+        },
+        asunto: {
+          type: 'string',
+          example: 'Correo de prueba',
+        },
+        mensaje: {
+          type: 'string',
+          example: 'HTML del mensaje',
+        },
+        archivo: {
+          type: 'object',
+          example: [
+            {
+              file: 'nombre.pdf (de acuerdo al tipo)',
+              base64: 'Base64 del archivo',
+            },
+          ],
+        },
+        guardar: {
+          type: 'boolean',
+          example: true,
+        },
+      },
+    },
+  })
   async sendMessage(@Res() res: Response, @Body() body: mailDTO) {
     let response = {
       error: true,
@@ -38,9 +69,7 @@ export class AppController {
     data.correo = body.correo;
     data.asunto = body.asunto;
     data.mensaje = body.mensaje;
-    data.archivo = body.archivo;
-    data.funcionarioId = body.funcionarioId;
-    data.aplicacion = body.aplicacion;
+    data.adjuntos = body.adjuntos;
     data.guardar = body.guardar;
 
     const valid = await validate(data);
@@ -62,23 +91,21 @@ export class AppController {
           estadoEnvio = true;
         }
 
-        let estadoFichero = false;
-        if (data.archivo.length != 0) {
-          estadoFichero = true;
+        let fichero = false;
+        if (data.adjuntos.length != 0) {
+          fichero = true;
         }
 
         if (data.guardar === true) {
           const logs = {
             origen: {
               correo: response.response,
-              app_nombre: data.aplicacion,
-              funcionario: data.funcionarioId,
             },
             destino: {
               correo: data.correo,
               asunto: data.asunto,
               mensaje: data.mensaje,
-              fichero: estadoFichero,
+              fichero,
             },
             enviado: estadoEnvio,
           };
